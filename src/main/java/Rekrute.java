@@ -72,7 +72,7 @@ public class Rekrute {
                     String regionText = emploi.selectFirst("li[title=Région]").text();
                     String niveauText = emploi.selectFirst("li[title=\"Niveau d'étude et formation\"]").text();
                     String competenceText = emploi.selectFirst(".tagSkills").text();
-                    Element entreprise = emploi.selectFirst("#recruiterDescription p");
+                    Element entreprise = emploi.selectFirst("#recruiterDescription strong");
                     String entrepriseText = (entreprise != null) ? entreprise.text() : "";
                     String secteurText = emploi.selectFirst(".h2italic").text();
                     String datePostMaxText = emploi.selectFirst(".newjob b").text();
