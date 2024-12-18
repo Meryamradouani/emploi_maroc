@@ -7,16 +7,32 @@ import org.jsoup.select.Elements;
 
 public class Mjob {
     public static void main(String[] args) {
+
         String baseUrl = "https://m-job.ma/recherche/informatique-internet-multimedia-2";
 
         // Connexion à la base de données
-        Connection conn = connectToDatabase("jdbc:mysql://localhost:3306/emploi_maroc", "root", "");
-
-        if (conn == null) {
-            System.out.println("Connexion à la base échouée. Arrêt du programme.");
-            return;
+        Connection conn = connectToDatabase("jdbc:mysql://localhost:3306/emploi", "root", "");
+        if (conn != null) {
+            System.out.println("Connexion réussie");
+        } else {
+            System.out.println("Échec de la connexion");
         }
 
+        String datePoste = null;
+        String titrePoste = null;
+        String companyName = null;
+        String descrEnt = null;
+        String descrposte = null;
+        Element region = null;
+        Element ville = null;
+        String secteur = null;
+        String metier = null;
+        String contractType = null;
+        String experience = null;
+        String profilRecherche = null;
+        String langue = null;
+        String salaireText = null;
+        Elements content;
         try {
             int page = 1; // Commencer par la première page
             boolean hasNextPage = true;
@@ -40,58 +56,88 @@ public class Mjob {
 
                     // Extraction de la date, de la localisation et autres informations de l'offre
                     Elements date = offre.select(".date-buttons span");
-                    String datePoste = date.text();  // Date de publication
+                    datePoste = date.text();
 
 
-                    Elements region = offre.select(".location");
-                    String ville = region.text();  // Ville (région)
+                    ville = offre.selectFirst(".location");
+                    region = offre.selectFirst(".location");
 
 
                     try {
                         Document docu = Jsoup.connect(hr).get();
                         Element titre = docu.selectFirst(".offer-title");
-                        String titrePoste = titre != null ? titre.text() : "Non spécifié";
+                        titrePoste = titre != null ? titre.text() : "Non spécifié";
 
                         // Extraction des détails spécifiques
                         Element ul = docu.selectFirst(".list-details");
                         Elements societe = ul.select("li:nth-child(1) h3");
-                        String companyName = societe.text();
+                        companyName = societe.text();
 
                         Elements contrat = ul.select("li:nth-child(2) h3");
-                        String contractType = contrat.text();
+                        contractType = contrat.text();
 
                         Elements salaire = ul.select("li:nth-child(3) h3");
-                        String salaireText = salaire.text();
-
-                        Elements content = docu.select(".the-content div");
-                        String descrEnt = content.size() > 0 ? content.get(0).text() : "Non spécifié";
-                        String descrposte = content.size() > 1 ? content.get(1).text() : "Non spécifié";
-                        String profilRecherche = content.size() > 2 ? content.get(2).text() : "Non spécifié";
-                        String secteur = content.size() > 3 ? content.get(3).text() : "Non spécifié";
-                        String metier = content.size() > 4 ? content.get(4).text() : "Non spécifié";
-                        String experience = content.size() > 5 ? content.get(5).text() : "Non spécifié";
+                        salaireText = salaire.text();
+                        content = docu.select(".the-content div");
+                        descrEnt = content.size() > 0 ? content.get(0).text() : "Non spécifié";
+                        descrposte = content.size() > 1 ? content.get(1).text() : "Non spécifié";
+                        profilRecherche = content.size() > 2 ? content.get(2).text() : "Non spécifié";
+                        secteur = content.size() > 3 ? content.get(3).text() : "Non spécifié";
+                        metier = content.size() > 4 ? content.get(4).text() : "Non spécifié";
+                        experience = content.size() > 5 ? content.get(5).text() : "Non spécifié";
                         String etude = content.size() > 6 ? content.get(6).text() : "Non spécifié";
-                        String langue = content.size() > 7 ? content.get(7).text() : "Non spécifié";
+                        langue = content.size() > 7 ? content.get(7).text() : "Non spécifié";
+
+
+                        String adresseEntreprise = "";
+                        String Url = "Mjob";
+                        String educationLevel = "non spécifie";
+                        String specialiteDiplome = "non spécifie";
+                        String traitsPersonnalite = "non spécifie";
+                        String avantagesSociaux = "non spécifie";
+                        String teletravail = "non spécifie";
+                        String niveauLangue = "non spécifie";
+                        String competencesRecommandees = "non spécifie";
+                        String softSkills = "non spécifie";
+                        String hardSkills = "non spécifie";
 
                         // Afficher les résultats pour le débogage
                         System.out.println("Post Name: " + titrePoste);
                         System.out.println("Date de publication: " + datePoste);
-                        System.out.println("Lien: " + hr);
-                        System.out.println("Type de contrat: " + contractType);
-                        System.out.println("Expérience: " + experience);
-                        System.out.println("Ville: " + ville);
-                        System.out.println("Niveau d'étude: " + etude);
-                        System.out.println("Compétences: " + profilRecherche);
+                        System.out.println("Lien: " + baseUrl);
+                        System.out.println("Site Name: Mjob");
+                        System.out.println("Adresse Entreprise: " + (adresseEntreprise.isEmpty() ? "Non spécifié" : adresseEntreprise));
                         System.out.println("Entreprise: " + companyName);
+                        System.out.println("Description Entreprise: " + descrEnt);
+                        System.out.println("Description Poste: " + descrposte);
+                        System.out.println("Région: " + (region != null ? region.text() : "Non spécifié"));
+                        System.out.println("Ville: " + (ville != null ? ville.text() : "Non spécifié"));
                         System.out.println("Secteur: " + secteur);
+                        System.out.println("Métier: " + metier);
+                        System.out.println("Type de Contrat: " + contractType);
+                        System.out.println("Niveau d'Étude: " + educationLevel);
+                        System.out.println("Spécialité Diplôme: " + specialiteDiplome);
+                        System.out.println("Expérience: " + experience);
+                        System.out.println("Profil Recherché: " + profilRecherche);
+                        System.out.println("Traits de Personnalité: " + traitsPersonnalite);
+                        System.out.println("Hard Skills: " + hardSkills);
+                        System.out.println("Soft Skills: " + softSkills);
+                        System.out.println("Compétences Recommandées: " + competencesRecommandees);
+                        System.out.println("Langues: " + langue);
+                        System.out.println("Niveau de Langue: " + niveauLangue);
                         System.out.println("Salaire: " + salaireText);
-                        System.out.println("Langues détectées: " + langue);
-                        System.out.println("Description: " + descrEnt);
+                        System.out.println("Avantages Sociaux: " + avantagesSociaux);
+                        System.out.println("Télétravail: " + teletravail);
+                        System.out.println("URL Base: " + baseUrl);
                         System.out.println("=========================================");
-
                         // Insérer les informations dans la base de données
-                        insertJobToDatabase(titrePoste, datePoste, baseUrl, contractType, experience, ville, etude,
-                                profilRecherche, companyName, secteur, langue, descrposte, profilRecherche);
+                        // Insérer les informations dans la base de données
+                        insertJobToDatabase(conn, titrePoste, hr, "Mjob", datePoste, "","", baseUrl, companyName, descrEnt,
+                                descrposte, region != null ? region.text() : "Non spécifié", ville != null ? ville.text() : "Non spécifié",
+                                secteur, metier, contractType, "non spécifié", "non spécifié", experience, profilRecherche,
+                                "non spécifié", "non spécifié", "non spécifié", langue, "non spécifié", salaireText,
+                                "non spécifié", "non spécifié");
+
                     } catch (Exception e) {
                         System.out.println("Erreur lors du traitement de l'offre : " + e.getMessage());
                         e.printStackTrace();
@@ -118,6 +164,10 @@ public class Mjob {
                 e.printStackTrace();
             }
         }
+
+
+
+
     }
 
     // Méthode pour se connecter à la base de données
@@ -131,37 +181,54 @@ public class Mjob {
     }
 
     // Méthode pour insérer les données dans la base de données
-    private static void insertJobToDatabase(String titre, String datePoste, String baseUrl, String contractType,
-                                            String experience, String ville, String etude, String profilRecherche,
-                                            String companyName, String secteur, String langues,
-                                            String descrPoste, String profilRecherche1) {
-        try (Connection conn = connectToDatabase("jdbc:mysql://localhost:3306/emploi_maroc", "root", "")) {
-            if (conn != null) {
-                String query = "INSERT INTO rekrute_jobs (title, description, date_posted, contract_type, experience_required, region, " +
-                        "education_level, lien, hard_skills, languages, company_name, sector) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static void insertJobToDatabase(Connection conn, String titrePoste, String Url, String siteName, String datePoste,
+                                            String adresseEntreprise, String baseUrl, String companyName, String descrEnt,
+                                            String descrposte, String region, String ville, String secteur, String metier,
+                                            String contractType, String educationLevel, String specialiteDiplome,
+                                            String experience, String profilRecherche, String traitsPersonnalite,
+                                            String hardSkills, String softSkills, String competencesRecommandees,
+                                            String langue, String niveauLangue, String salaireText, String avantagesSociaux,
+                                            String teletravail) {
+        String query = "INSERT INTO offres_emploi (titre, url, site_name, date_publication, date_postuler, " +
+                "adresse_entreprise, site_web_entreprise, nom_entreprise, description_entreprise, " +
+                "description_poste, region, ville, secteur_activite, metier, type_contrat, niveau_etudes, " +
+                "specialite_diplome, experience, profil_recherche, traits_personnalite, hard_skills, " +
+                "soft_skills, competences_recommandees, langue, niveau_langue, salaire, avantages_sociaux, " +
+                "teletravail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-                try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                    // Paramètres de la requête préparée
-                    stmt.setString(1, titre);  // Titre de l'offre
-                    stmt.setString(2, descrPoste);  // Description du poste
-                    stmt.setString(3, datePoste);  // Date de publication
-                    stmt.setString(4, contractType);  // Type de contrat
-                    stmt.setString(5, experience);  // Expérience requise
-                    stmt.setString(6, ville);  // Ville
-                    stmt.setString(7, etude);  // Niveau d'études
-                    stmt.setString(8, baseUrl);  // Lien vers l'offre
-                    stmt.setString(9, profilRecherche);  // Compétences requises
-                    stmt.setString(10, langues);  // Langues
-                    stmt.setString(11, companyName);  // Nom de l'entreprise
-                    stmt.setString(12, secteur);  // Secteur
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, titrePoste);
+            pstmt.setString(2, baseUrl);
+            pstmt.setString(3, siteName);
+            pstmt.setString(4, datePoste);
+            pstmt.setString(5, datePoste);
+            pstmt.setString(6, adresseEntreprise);
+            pstmt.setString(7, Url);
+            pstmt.setString(8, companyName);
+            pstmt.setString(9, descrEnt);
+            pstmt.setString(10, descrposte);
+            pstmt.setString(11, region);
+            pstmt.setString(12, ville);
+            pstmt.setString(13, secteur);
+            pstmt.setString(14, metier);
+            pstmt.setString(15, contractType);
+            pstmt.setString(16, educationLevel);
+            pstmt.setString(17, specialiteDiplome);
+            pstmt.setString(18, experience);
+            pstmt.setString(19, profilRecherche);
+            pstmt.setString(20, traitsPersonnalite);
+            pstmt.setString(21, hardSkills);
+            pstmt.setString(22, softSkills);
+            pstmt.setString(23, competencesRecommandees);
+            pstmt.setString(24, langue);
+            pstmt.setString(25, niveauLangue);
+            pstmt.setString(26, salaireText);
+            pstmt.setString(27, avantagesSociaux);
+            pstmt.setString(28, teletravail);
 
-                    stmt.executeUpdate();
-                    System.out.println("Offre insérée avec succès dans la base de données !");
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de l'insertion dans la base de données : " + e.getMessage());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Erreur d'insertion pour le titre : " + titrePoste + ", Message : " + ex.getMessage());
         }
     }
 }
