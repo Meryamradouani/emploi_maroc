@@ -57,7 +57,7 @@ public class Rekrute {
         try {
             int k = 1;
 
-            for (int i = 0; i < 8; i++) { // Limitez à 2 pages pour le test
+            for (int i = 0; i < 30; i++) { // Limitez à 2 pages pour le test
                 Document doc = Jsoup.connect("https://www.rekrute.com/offres.html?s=3&p=" + i + "&o=1").get();
                 Elements newsHeadlines = doc.select(".post-id");
 

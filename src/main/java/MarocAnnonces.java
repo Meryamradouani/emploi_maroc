@@ -26,7 +26,7 @@ public class MarocAnnonces {
 
         List<Map<String, Object>> jobOffers = new ArrayList<>();
         try {
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i <= 30; i++) {
                 String urli = "https://www.marocannonces.com/categorie/309/Emploi/Offres-emploi/" + i + ".html";
                 Document document = Jsoup.connect(urli).get();
                 Elements hrefs = document.select("#main #twocolumns #content .used-cars .content_box a");

@@ -19,7 +19,7 @@ public class Emploi {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             System.out.println("Connexion à la base de données réussie.");
 
-            for (int i = 0; i < 5; i++) { // Pagination
+            for (int i = 0; i < 30; i++) { // Pagination
                 String url = "https://www.emploi.ma/recherche-jobs-maroc/?f%5B0%5D=im_field_offre_metiers%3A31&o=" + (i + 1);
                 Document doc = Jsoup.connect(url).get();
 
